@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pomodoro Timer</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #1a1a2e; color: #eee; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
+  h1 { font-size: 24px; margin-bottom: 2rem; color: #fff; font-weight: 500; }
+  .circle { width: 200px; height: 200px; border-radius: 50%; border: 4px solid #444; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto 2rem; transition: border-color 0.3s; }
+  .circle.focus { border-color: #e74c3c; }
+  .circle.break { border-color: #2ecc71; }
+  .time { font-size: 52px; font-weight: 500; color: #fff; }
+  .mode { font-size: 16px; color: #aaa; margin-top: 6px; }
+  .buttons { display: flex; gap: 12px; margin-bottom: 2rem; }
+  button { padding: 10px 28px; font-size: 15px; border-radius: 8px; border: 1px solid #555; background: #2a2a3e; color: #fff; cursor: pointer; transition: background 0.2s; }
+  button:hover { background: #3a3a5e; }
+  #start-btn { border-color: #e74c3c; color: #e74c3c; }
+  #start-btn.running { border-color: #f39c12; color: #f39c12; }
+  .dots-label { font-size: 13px; color: #888; margin-bottom: 8px; }
+  .dots { display: flex; gap: 10px; }
+  .dot { width: 14px; height: 14px; border-radius: 50%; background: #333; border: 1px solid #555; transition: background 0.3s; }
+  .dot.done { background: #2ecc71; border-color: #2ecc71; }
+  .tip { margin-top: 2rem; font-size: 13px; color: #666; max-width: 320px; text-align: center; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<h1>⏱ Pomodoro Timer</h1>
+
+<div class="circle focus" id="circle">
+  <div class="time" id="time">50:00</div>
+  <div class="mode" id="mode">Focus</div>
+</div>
+
+<div class="buttons">
+  <button id="start-btn" onclick="toggle()">▶ Start</button>
+  <button onclick="reset()">↺ Reset</button>
+</div>
+
+<div class="dots-label">Sessions completed:</div>
+<div class="dots" id="dots">
+  <div class="dot"></div>
+  <div class="dot"></div>
+  <div class="dot"></div>
+  <div class="dot"></div>
+</div>
+
+<div class="tip">💡 50 min focus → 10 min break. එක් session එකක් ඉවර උනාම alarm එකක් වදිනවා.</div>
+
+<script>
+  const FOCUS_TIME = 50 * 60;
+  const BREAK_TIME = 10 * 60;
+
+  let seconds = FOCUS_TIME;
+  let running = false;
+  let interval = null;
+  let mode = 'focus';
+  let sessions = 0;
+  let wakeLock = null;
+
+  async function requestWakeLock() {
+    try {
+      if ('wakeLock' in navigator) {
+        wakeLock = await navigator.wakeLock.request('screen');
+        wakeLock.addEventListener('release', () => {
+          wakeLock = null;
+        });
+      }
+    } catch (err) {
+      // Wake lock not available or denied — timer still works, screen just may sleep
+      console.log('Wake Lock error:', err);
+    }
+  }
+
+  function releaseWakeLock() {
+    if (wakeLock) {
+      wakeLock.release();
+      wakeLock = null;
+    }
+  }
+
+  // Re-acquire wake lock if page becomes visible again while running
+  document.addEventListener('visibilitychange', async () => {
+    if (running && document.visibilityState === 'visible') {
+      await requestWakeLock();
+    }
+  });
+
+  // Web Audio API based alarm — no external file needed
+  function playAlarm() {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    const ctx = new AudioCtx();
+    const beepTimes = [0, 0.4, 0.8, 1.2, 1.6]; // 5 beeps
+    beepTimes.forEach((t) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = 880;
+      gain.gain.setValueAtTime(0.0001, ctx.currentTime + t);
+      gain.gain.exponentialRampToValueAtTime(0.4, ctx.currentTime + t + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + t + 0.3);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime + t);
+      osc.stop(ctx.currentTime + t + 0.35);
+    });
+  }
+
+  function updateDisplay() {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    document.getElementById('time').textContent =
+      String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+    document.getElementById('mode').textContent = mode === 'focus' ? 'Focus' : 'Break';
+    const circle = document.getElementById('circle');
+    circle.className = 'circle ' + mode;
+    const dots = document.querySelectorAll('.dot');
+    dots.forEach((d, i) => {
+      d.className = 'dot' + (i < sessions % 4 ? ' done' : '');
+    });
+  }
+
+  function toggle() {
+    const btn = document.getElementById('start-btn');
+    if (running) {
+      clearInterval(interval);
+      running = false;
+      btn.textContent = '▶ Resume';
+      btn.className = '';
+      releaseWakeLock();
+    } else {
+      running = true;
+      btn.textContent = '⏸ Pause';
+      btn.className = 'running';
+      requestWakeLock();
+      interval = setInterval(() => {
+        seconds--;
+        if (seconds <= 0) {
+          playAlarm();
+          if (mode === 'focus') {
+            sessions++;
+            mode = 'break';
+            seconds = BREAK_TIME;
+          } else {
+            mode = 'focus';
+            seconds = FOCUS_TIME;
+          }
+        }
+        updateDisplay();
+      }, 1000);
+    }
+  }
+
+  function reset() {
+    clearInterval(interval);
+    running = false;
+    releaseWakeLock();
+    seconds = FOCUS_TIME;
+    mode = 'focus';
+    document.getElementById('start-btn').textContent = '▶ Start';
+    document.getElementById('start-btn').className = '';
+    updateDisplay();
+  }
+
+  updateDisplay();
+</script>
+</body>
+</html>
