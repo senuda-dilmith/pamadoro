@@ -10,7 +10,7 @@
   
   body { 
     font-family: 'Inter', sans-serif; 
-    background: #0f172a; 
+    background: #0f172a; /* පින්තූරයේ ඇති තද නිල්-කළු background color එක */
     color: #eee; 
     display: flex; 
     flex-direction: column; 
@@ -19,7 +19,7 @@
     padding: 30px 20px;
   }
   
-  /* Live Clock - Laptop Size */
+  /* Highlighted Real-time Clock Style - ORIGINAL LARGE */
   .real-time-clock { 
     font-size: 20px; 
     font-weight: bold;
@@ -34,7 +34,7 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); 
   }
 
-  /* Split Layout Container */
+  /* Split Layout Container - ORIGINAL GAP */
   .container {
     display: flex;
     width: 100%;
@@ -45,6 +45,7 @@
     flex-wrap: wrap; 
   }
 
+  /* Left and Right Sections */
   .section {
     flex: 1;
     min-width: 320px;
@@ -55,7 +56,7 @@
     justify-content: center;
   }
 
-  /* Headings - Laptop Size */
+  /* මාතෘකා සඳහා Serif Font එක - ORIGINAL LARGE */
   h1 { 
     font-family: 'Playfair Display', Georgia, serif; 
     font-size: 36px; 
@@ -65,7 +66,7 @@
     text-align: center; 
   }
 
-  /* Countdown Display - Laptop Size */
+  /* Countdown Clock Styles (Left Side) - ORIGINAL LARGE */
   .countdown-display {
     display: flex;
     gap: 12px;
@@ -95,7 +96,7 @@
     letter-spacing: 1px;
   }
 
-  /* Info Boxes - Laptop Size */
+  /* Info Boxes Container - ORIGINAL LARGE */
   .info-boxes-container {
     display: flex;
     gap: 16px;
@@ -136,7 +137,7 @@
     margin-left: 4px;
   }
 
-  /* Pomodoro Styles - Laptop Size */
+  /* Pomodoro Styles (Right Side) - ORIGINAL LARGE */
   .circle { 
     width: 200px; 
     height: 200px; 
@@ -167,12 +168,15 @@
   
   .tip { margin-top: 2rem; font-size: 13px; color: #64748b; max-width: 320px; text-align: center; line-height: 1.6; }
 
-  /* Mobile Devices (Phones) සඳහා පමණක් මෙතනින් පල්ලෙහා සයිස් වෙනස් වේ */
+  /* ------------------------------------------------------------- */
+  /* ONLY FOR MOBILE DEVICES - මෙතනින් පල්ලෙහා සයිස් වෙනස් වෙන්නේ Phone එකෙන් බලද්දී විතරයි */
+  /* ------------------------------------------------------------- */
   @media (max-width: 480px) {
     body { padding: 20px 15px; }
-    h1 { font-size: 24px; margin-bottom: 1rem; }
     .real-time-clock { font-size: 14px; margin-bottom: 1.5rem; padding: 6px 16px; }
-    .countdown-display { gap: 8px; margin-bottom: 1.5rem; }
+    .container { gap: 30px; }
+    h1 { font-size: 24px; margin-bottom: 1rem; }
+    .countdown-display { gap: 8px; margin-bottom: 1.5rem; width: 100%; justify-content: center; }
     .time-box { padding: 8px 10px; min-width: 65px; max-width: 90px; border-radius: 10px; }
     .time-box .num { font-size: 24px; }
     .time-box .label { font-size: 9px; margin-top: 4px; }
