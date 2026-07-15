@@ -10,26 +10,26 @@
   
   body { 
     font-family: 'Inter', sans-serif; 
-    background: #0f172a; /* පින්තූරයේ ඇති තද නිල්-කළු background color එක */
+    background: #0f172a; 
     color: #eee; 
     display: flex; 
     flex-direction: column; 
     align-items: center; 
     min-height: 100vh; 
-    padding: 30px 20px;
+    padding: 20px 15px;
   }
   
-  /* Highlighted Real-time Clock Style */
+  /* Live Clock Style */
   .real-time-clock { 
-    font-size: 20px; 
+    font-size: 16px; 
     font-weight: bold;
     color: #ffffff; 
     background: #1e293b; 
-    padding: 8px 20px; 
+    padding: 6px 16px; 
     border-radius: 20px; 
-    margin-bottom: 3rem; 
+    margin-bottom: 2rem; 
     border: 2px solid #334155; 
-    letter-spacing: 2px; 
+    letter-spacing: 1.5px; 
     text-align: center;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); 
   }
@@ -39,134 +39,154 @@
     display: flex;
     width: 100%;
     max-width: 1100px;
-    gap: 60px;
+    gap: 40px;
     justify-content: center;
     align-items: flex-start;
     flex-wrap: wrap; 
   }
 
-  /* Left and Right Sections */
+  /* Sections */
   .section {
     flex: 1;
-    min-width: 320px;
-    padding: 10px;
+    min-width: 300px;
+    padding: 5px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
   }
 
-  /* මාතෘකා සඳහා Serif Font එක */
+  /* Headings */
   h1 { 
     font-family: 'Playfair Display', Georgia, serif; 
-    font-size: 36px; 
+    font-size: 32px; 
     font-weight: 700;
-    margin-bottom: 2rem; 
+    margin-bottom: 1.5rem; 
     color: #fff; 
     text-align: center; 
   }
 
-  /* Countdown Clock Styles (Left Side) */
+  /* Countdown Display */
   .countdown-display {
     display: flex;
-    gap: 12px;
-    margin-bottom: 2rem;
+    gap: 8px;
+    margin-bottom: 1.5rem;
+    width: 100%;
+    justify-content: center;
   }
   
   .time-box {
     background: #1e293b; 
     border: 1px solid #334155;
-    border-radius: 12px;
-    padding: 16px 20px;
+    border-radius: 10px;
+    padding: 12px 14px;
     text-align: center;
-    min-width: 80px;
+    flex: 1;
+    max-width: 90px;
+    min-width: 65px;
   }
   
   .time-box .num {
-    font-size: 42px;
+    font-size: 32px;
     font-weight: bold;
     color: #ffffff; 
     font-family: 'Inter', sans-serif;
   }
   .time-box .label {
-    font-size: 11px;
+    font-size: 10px;
     color: #64748b;
     text-transform: uppercase;
-    margin-top: 6px;
-    letter-spacing: 1px;
+    margin-top: 4px;
+    letter-spacing: 0.5px;
   }
 
-  /* Info Boxes Container */
+  /* Info Boxes */
   .info-boxes-container {
     display: flex;
-    gap: 16px;
+    gap: 12px;
     width: 100%;
-    max-width: 450px;
-    margin-top: 1rem;
+    max-width: 400px;
+    margin-top: 0.5rem;
+    margin-bottom: 1.5rem;
   }
   
   .info-box {
     flex: 1;
     background: #1e293b;
     border: 1px solid #334155;
-    border-radius: 12px;
-    padding: 16px;
+    border-radius: 10px;
+    padding: 12px 14px;
     text-align: left;
   }
   
   .info-box .info-label {
-    font-size: 11px;
+    font-size: 10px;
     color: #64748b;
     text-transform: uppercase;
     font-weight: 600;
-    letter-spacing: 1px;
-    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
   }
   
   .info-box .info-val {
-    font-size: 20px;
+    font-size: 16px;
     font-weight: bold;
     color: #ffffff;
     line-height: 1.3;
   }
   
   .info-box .info-val span {
-    font-size: 14px;
+    font-size: 12px;
     color: #64748b;
     font-weight: normal;
-    margin-left: 4px;
+    margin-left: 3px;
   }
 
-  /* Pomodoro Styles (Right Side) */
+  /* Pomodoro Styles */
   .circle { 
-    width: 200px; 
-    height: 200px; 
+    width: 180px; 
+    height: 180px; 
     border-radius: 50%; 
     border: 4px solid #444; 
     display: flex; 
     flex-direction: column; 
     align-items: center; 
     justify-content: center; 
-    margin-bottom: 2rem; 
+    margin-bottom: 1.5rem; 
     transition: border-color 0.3s; 
   }
   .circle.focus { border-color: #e74c3c; }
   .circle.break { border-color: #2ecc71; }
-  .time { font-size: 52px; font-weight: 500; color: #fff; }
-  .mode { font-size: 16px; color: #aaa; margin-top: 6px; }
+  .time { font-size: 44px; font-weight: 500; color: #fff; }
+  .mode { font-size: 14px; color: #aaa; margin-top: 4px; }
   
-  .buttons { display: flex; gap: 12px; margin-bottom: 2rem; }
-  button { padding: 10px 28px; font-size: 15px; border-radius: 8px; border: 1px solid #555; background: #1e293b; color: #fff; cursor: pointer; transition: background 0.2s; }
+  .buttons { display: flex; gap: 10px; margin-bottom: 1.5rem; }
+  button { padding: 8px 24px; font-size: 14px; border-radius: 8px; border: 1px solid #555; background: #1e293b; color: #fff; cursor: pointer; transition: background 0.2s; }
   button:hover { background: #334155; }
   #start-btn { border-color: #e74c3c; color: #e74c3c; }
   #start-btn.running { border-color: #f39c12; color: #f39c12; }
   
-  .dots-label { font-size: 13px; color: #888; margin-bottom: 8px; }
-  .dots { display: flex; gap: 10px; }
-  .dot { width: 14px; height: 14px; border-radius: 50%; background: #333; border: 1px solid #555; transition: background 0.3s; }
+  .dots-label { font-size: 12px; color: #888; margin-bottom: 6px; }
+  .dots { display: flex; gap: 8px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; background: #333; border: 1px solid #555; transition: background 0.3s; }
   .dot.done { background: #2ecc71; border-color: #2ecc71; }
   
-  .tip { margin-top: 2rem; font-size: 13px; color: #64748b; max-width: 320px; text-align: center; line-height: 1.6; }
+  .tip { margin-top: 1.5rem; font-size: 12px; color: #64748b; max-width: 300px; text-align: center; line-height: 1.5; }
+
+  /* Mobile Devices (Phones) සඳහා විශේෂයෙන්ම Sizes තවත් කුඩා කිරීම */
+  @media (max-width: 480px) {
+    h1 { font-size: 24px; margin-bottom: 1rem; }
+    .real-time-clock { font-size: 14px; margin-bottom: 1.5rem; }
+    .time-box { padding: 8px 10px; }
+    .time-box .num { font-size: 24px; }
+    .time-box .label { font-size: 9px; }
+    .info-box { padding: 10px 12px; }
+    .info-box .info-label { font-size: 9px; }
+    .info-box .info-val { font-size: 14px; }
+    .circle { width: 150px; height: 150px; }
+    .time { font-size: 36px; }
+    button { padding: 8px 20px; font-size: 13px; }
+  }
 </style>
 </head>
 <body>
@@ -233,7 +253,7 @@
 </div>
 
 <script>
-  // A/L Countdown Target Date: August 11, 2026, 20:00:00 (8:00 PM)
+  // Countdown Target Date
   const targetDate = new Date("August 11, 2026 20:00:00").getTime();
 
   function updateCountdown() {
@@ -266,7 +286,7 @@
   setInterval(updateCountdown, 1000);
   updateCountdown();
 
-  // Pomodoro Setup (කාලය විනාඩි 25ක් සහ විනාඩි 5ක් ලෙස වෙනස් කරන ලදි)
+  // Pomodoro Setup (25 min Focus / 5 min Break)
   const FOCUS_TIME = 25 * 60; 
   const BREAK_TIME = 5 * 60; 
 
