@@ -3,62 +3,272 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pomodoro Timer</title>
+<title>A/L Countdown & Pomodoro</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: Arial, sans-serif; background: #1a1a2e; color: #111; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
   
-  /* Real-time Clock Style */
-  .real-time-clock { font-size: 18px; color: #888; background: #22223b; padding: 8px 16px; border-radius: 20px; margin-bottom: 1rem; border: 1px solid #333; letter-spacing: 1px; }
+  body { 
+    font-family: 'Inter', sans-serif; 
+    background: #0f172a; /* පින්තූරයේ ඇති තද නිල්-කළු background color එක */
+    color: #eee; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    min-height: 100vh; 
+    padding: 30px 20px;
+  }
   
-  h1 { font-size: 24px; margin-bottom: 2rem; color: #fff; font-weight: 500; }
-  .circle { width: 200px; height: 200px; border-radius: 50%; border: 4px solid #444; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto 2rem; transition: border-color 0.3s; }
+  /* Highlighted Real-time Clock Style */
+  .real-time-clock { 
+    font-size: 20px; 
+    font-weight: bold;
+    color: #ffffff; 
+    background: #1e293b; 
+    padding: 8px 20px; 
+    border-radius: 20px; 
+    margin-bottom: 3rem; 
+    border: 2px solid #334155; 
+    letter-spacing: 2px; 
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); 
+  }
+
+  /* Split Layout Container */
+  .container {
+    display: flex;
+    width: 100%;
+    max-width: 1100px;
+    gap: 60px;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap; 
+  }
+
+  /* Left and Right Sections */
+  .section {
+    flex: 1;
+    min-width: 320px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* මාතෘකා සඳහා Serif Font එක */
+  h1 { 
+    font-family: 'Playfair Display', Georgia, serif; 
+    font-size: 36px; 
+    font-weight: 700;
+    margin-bottom: 2rem; 
+    color: #fff; 
+    text-align: center; 
+  }
+
+  /* Countdown Clock Styles (Left Side) */
+  .countdown-display {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+  
+  .time-box {
+    background: #1e293b; 
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 16px 20px;
+    text-align: center;
+    min-width: 80px;
+  }
+  
+  .time-box .num {
+    font-size: 42px;
+    font-weight: bold;
+    color: #ffffff; 
+    font-family: 'Inter', sans-serif;
+  }
+  .time-box .label {
+    font-size: 11px;
+    color: #64748b;
+    text-transform: uppercase;
+    margin-top: 6px;
+    letter-spacing: 1px;
+  }
+
+  /* Info Boxes Container */
+  .info-boxes-container {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    max-width: 450px;
+    margin-top: 1rem;
+  }
+  
+  .info-box {
+    flex: 1;
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: left;
+  }
+  
+  .info-box .info-label {
+    font-size: 11px;
+    color: #64748b;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  
+  .info-box .info-val {
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffffff;
+    line-height: 1.3;
+  }
+  
+  .info-box .info-val span {
+    font-size: 14px;
+    color: #64748b;
+    font-weight: normal;
+    margin-left: 4px;
+  }
+
+  /* Pomodoro Styles (Right Side) */
+  .circle { 
+    width: 200px; 
+    height: 200px; 
+    border-radius: 50%; 
+    border: 4px solid #444; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    margin-bottom: 2rem; 
+    transition: border-color 0.3s; 
+  }
   .circle.focus { border-color: #e74c3c; }
   .circle.break { border-color: #2ecc71; }
   .time { font-size: 52px; font-weight: 500; color: #fff; }
   .mode { font-size: 16px; color: #aaa; margin-top: 6px; }
+  
   .buttons { display: flex; gap: 12px; margin-bottom: 2rem; }
-  button { padding: 10px 28px; font-size: 15px; border-radius: 8px; border: 1px solid #555; background: #2a2a3e; color: #fff; cursor: pointer; transition: background 0.2s; }
-  button:hover { background: #3a3a5e; }
+  button { padding: 10px 28px; font-size: 15px; border-radius: 8px; border: 1px solid #555; background: #1e293b; color: #fff; cursor: pointer; transition: background 0.2s; }
+  button:hover { background: #334155; }
   #start-btn { border-color: #e74c3c; color: #e74c3c; }
   #start-btn.running { border-color: #f39c12; color: #f39c12; }
+  
   .dots-label { font-size: 13px; color: #888; margin-bottom: 8px; }
   .dots { display: flex; gap: 10px; }
   .dot { width: 14px; height: 14px; border-radius: 50%; background: #333; border: 1px solid #555; transition: background 0.3s; }
   .dot.done { background: #2ecc71; border-color: #2ecc71; }
-  .tip { margin-top: 2rem; font-size: 13px; color: #666; max-width: 320px; text-align: center; line-height: 1.6; }
+  
+  .tip { margin-top: 2rem; font-size: 13px; color: #64748b; max-width: 320px; text-align: center; line-height: 1.6; }
 </style>
 </head>
 <body>
 
-<!-- Real-time Clock Display -->
-<div class="real-time-clock" id="live-clock">00:00:00 PM</div>
+<div class="real-time-clock" id="live-clock">NOW: 00:00:00 PM</div>
 
-<h1>⏱ Pomodoro Timer</h1>
+<div class="container">
+  
+  <div class="section">
+    <h1>A/L exam is approaching.</h1>
+    <div class="countdown-display">
+      <div class="time-box">
+        <div class="num" id="cd-days">00</div>
+        <div class="label">Days</div>
+      </div>
+      <div class="time-box">
+        <div class="num" id="cd-hours">00</div>
+        <div class="label">Hours</div>
+      </div>
+      <div class="time-box">
+        <div class="num" id="cd-mins">00</div>
+        <div class="label">Minutes</div>
+      </div>
+      <div class="time-box">
+        <div class="num" id="cd-secs">00</div>
+        <div class="label">Seconds</div>
+      </div>
+    </div>
+    
+    <div class="info-boxes-container">
+      <div class="info-box">
+        <div class="info-label">Hours Remaining</div>
+        <div class="info-val" id="hours-remaining">000<span>hrs</span></div>
+      </div>
+      <div class="info-box">
+        <div class="info-label">Target Date</div>
+        <div class="info-val">August 11, 8pm</div>
+      </div>
+    </div>
+  </div>
 
-<div class="circle focus" id="circle">
-  <div class="time" id="time">50:00</div>
-  <div class="mode" id="mode">Focus</div>
+  <div class="section">
+    <h1>⏱ Pomodoro Timer</h1>
+    <div class="circle focus" id="circle">
+      <div class="time" id="time">25:00</div>
+      <div class="mode" id="mode">Focus</div>
+    </div>
+
+    <div class="buttons">
+      <button id="start-btn" onclick="toggle()">▶ Start</button>
+      <button onclick="reset()">↺ Reset</button>
+    </div>
+
+    <div class="dots-label">Sessions completed:</div>
+    <div class="dots" id="dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+    <div class="tip">💡 25 min focus → 5 min break.</div>
+  </div>
+
 </div>
-
-<div class="buttons">
-  <button id="start-btn" onclick="toggle()">▶ Start</button>
-  <button onclick="reset()">↺ Reset</button>
-</div>
-
-<div class="dots-label">Sessions completed:</div>
-<div class="dots" id="dots">
-  <div class="dot"></div>
-  <div class="dot"></div>
-  <div class="dot"></div>
-  <div class="dot"></div>
-</div>
-
-<div class="tip">💡 50 min focus → 10 min break.</div>
 
 <script>
-  const FOCUS_TIME = 50 * 60;
-  const BREAK_TIME = 10 * 60;
+  // A/L Countdown Target Date: August 11, 2026, 20:00:00 (8:00 PM)
+  const targetDate = new Date("August 11, 2026 20:00:00").getTime();
+
+  function updateCountdown() {
+    const now = new Date().getTime();
+    const difference = targetDate - now;
+
+    if (difference < 0) {
+      document.getElementById('cd-days').textContent = "00";
+      document.getElementById('cd-hours').textContent = "00";
+      document.getElementById('cd-mins').textContent = "00";
+      document.getElementById('cd-secs').textContent = "00";
+      document.getElementById('hours-remaining').innerHTML = "0<span>hrs</span>";
+      return;
+    }
+
+    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+    const totalHoursRemaining = Math.floor(difference / (1000 * 60 * 60));
+
+    document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
+    document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+    document.getElementById('cd-mins').textContent = String(minutes).padStart(2, '0');
+    document.getElementById('cd-secs').textContent = String(seconds).padStart(2, '0');
+    
+    document.getElementById('hours-remaining').innerHTML = `${totalHoursRemaining}<span>hrs</span>`;
+  }
+  setInterval(updateCountdown, 1000);
+  updateCountdown();
+
+  // Pomodoro Setup (කාලය විනාඩි 25ක් සහ විනාඩි 5ක් ලෙස වෙනස් කරන ලදි)
+  const FOCUS_TIME = 25 * 60; 
+  const BREAK_TIME = 5 * 60; 
 
   let seconds = FOCUS_TIME;
   let running = false;
@@ -67,7 +277,7 @@
   let sessions = 0;
   let wakeLock = null;
 
-  // Real-time Clock Function
+  // Real-time Clock
   function updateLiveClock() {
     const now = new Date();
     let hours = now.getHours();
@@ -76,14 +286,13 @@
     const ampm = hours >= 12 ? 'PM' : 'AM';
     
     hours = hours % 12;
-    hours = hours ? hours : 12; // 0 වෙනුවට 12 කරන්න
+    hours = hours ? hours : 12;
     const formattedHours = String(hours).padStart(2, '0');
 
-    document.getElementById('live-clock').textContent = `${formattedHours}:${minutes}:${secs} ${ampm}`;
+    document.getElementById('live-clock').textContent = `NOW: ${formattedHours}:${minutes}:${secs} ${ampm}`;
   }
-  // හැම තත්පරේම ඔරලෝසුව අප්ඩේට් කරන්න
   setInterval(updateLiveClock, 1000);
-  updateLiveClock(); // මුලින්ම එක පාරක් රන් කරන්න
+  updateLiveClock();
 
   async function requestWakeLock() {
     try {
